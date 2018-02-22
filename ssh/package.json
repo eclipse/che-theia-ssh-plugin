@@ -1,0 +1,48 @@
+{
+  "name": "che-theia-ssh-extension",
+  "version": "0.0.0",
+  "description": "SSH key management support for the Theia IDE",
+  "keywords": [
+    "theia-extension",
+    "che",
+    "ssh"
+  ],
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse/che-theia-ssh-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eclipse/che-theia-ssh-plugin/issues"
+  },
+  "homepage": "https://github.com/eclipse/che-theia-ssh-plugin",
+  "contributors": [
+    {
+      "name": "Artem Zatsarynnyi",
+      "email": "azatsary@redhat.com"
+    }
+  ],
+  "files": [
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "@theia/core": "latest"
+  },
+  "devDependencies": {
+    "rimraf": "latest",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/ssh-frontend-module",
+      "backend": "lib/node/ssh-backend-module"
+    }
+  ]
+}
