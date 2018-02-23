@@ -9,7 +9,16 @@
  *   Red Hat, Inc. - initial API and implementation
  */
 
-import { ContainerModule } from "inversify";
+import { ContainerModule } from 'inversify';
+import { JsonRpcConnectionHandler, ConnectionHandler } from '@theia/core/lib/common';
+import { FakeSshKeyServer } from './fake-ssh-key-server';
+import { SshKeyServer, sshKeyServicePath } from '../common/ssh-protocol';
 
 export default new ContainerModule(bind => {
+    bind(SshKeyServer).to(FakeSshKeyServer).inSingletonScope();
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new JsonRpcConnectionHandler(sshKeyServicePath, () =>
+            ctx.container.get(SshKeyServer)
+        )
+    ).inSingletonScope();
 });
