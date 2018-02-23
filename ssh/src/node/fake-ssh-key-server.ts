@@ -24,6 +24,7 @@ export class FakeSshKeyServer implements SshKeyServer {
         [
             { service: 'workspace', name: 'ws-id', privateKey: 'private key content', publicKey: 'public key content' },
             { service: 'machine', name: 'ws-agent machine', privateKey: 'private key content', publicKey: 'public key content' },
+            { service: 'machine', name: 'db machine', privateKey: 'private key content', publicKey: 'public key content' },
             { service: 'vcs', name: 'github.com', privateKey: 'private key content', publicKey: 'public key content' },
             { service: 'vcs', name: 'gitlab.com', privateKey: 'private key content', publicKey: 'public key content' }
         ].forEach(keyPair => {

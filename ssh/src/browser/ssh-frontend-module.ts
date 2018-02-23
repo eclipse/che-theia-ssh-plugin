@@ -9,7 +9,18 @@
  *   Red Hat, Inc. - initial API and implementation
  */
 
-import { ContainerModule } from "inversify";
+import { ContainerModule } from 'inversify';
+import { WebSocketConnectionProvider } from '@theia/core/lib/browser';
+import { CommandContribution } from '@theia/core/lib/common';
+import { SshFrontendContribution } from './ssh-frontend-contribution';
+import { SshKeyServer, sshKeyServicePath } from '../common/ssh-protocol';
+
+import '../../src/browser/style/index.css';
 
 export default new ContainerModule(bind => {
+    bind(CommandContribution).to(SshFrontendContribution).inSingletonScope();
+    bind(SshKeyServer).toDynamicValue(ctx => {
+        const provider = ctx.container.get(WebSocketConnectionProvider);
+        return provider.createProxy<SshKeyServer>(sshKeyServicePath);
+    }).inSingletonScope();
 });
