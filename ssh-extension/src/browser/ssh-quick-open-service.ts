@@ -9,11 +9,13 @@
  *   Red Hat, Inc. - initial API and implementation
  */
 
-import { inject, injectable } from "inversify";
-import { MessageService } from "@theia/core";
-import { QuickOpenOptions, QuickOpenMode } from "@theia/core/lib/browser";
+import { inject, injectable } from 'inversify';
+import { MessageService } from '@theia/core';
+import { QuickOpenOptions, QuickOpenMode } from '@theia/core/lib/browser';
 import { QuickOpenService, QuickOpenModel, QuickOpenItem } from '@theia/core/lib/browser/quick-open/';
-import { SshKeyServer, SshKeyPair } from "../common/ssh-protocol";
+import { WindowService } from '@theia/core/lib/browser/window/window-service';
+import { ClipboardService } from './clipboard-service';
+import { SshKeyServer, SshKeyPair } from '../common/ssh-protocol';
 
 export interface CheService {
     name: string,
@@ -28,11 +30,14 @@ export class SshQuickOpenService {
      * Known Che services which can use the SSH key pairs.
      */
     protected readonly services: CheService[];
+    protected readonly downloadAction = 'Download';
 
     constructor(
         @inject(QuickOpenService) protected readonly quickOpenService: QuickOpenService,
         @inject(SshKeyServer) protected readonly sshKeyServer: SshKeyServer,
-        @inject(MessageService) protected readonly messageService: MessageService
+        @inject(MessageService) protected readonly messageService: MessageService,
+        @inject(ClipboardService) protected readonly clipboardService: ClipboardService,
+        @inject(WindowService) protected readonly windowService: WindowService
     ) {
         this.services = [
             { name: 'vcs', displayName: 'VCS', description: 'SSH keys used by Che VCS plugins' },
@@ -45,9 +50,9 @@ export class SshQuickOpenService {
             try {
                 const keyPair = await this.sshKeyServer.generate(service, name);
                 if (service === 'machine' && keyPair.privateKey) {
-                    const action = await this.messageService.info('Do you want to download generated private key?', 'Download');
-                    if (action === 'Download') {
-                        window.open(`data:application/x-pem-key,${encodeURIComponent(keyPair.privateKey)}`, '_blank');
+                    const action = await this.messageService.info('Do you want to download generated private key?', this.downloadAction);
+                    if (action === this.downloadAction) {
+                        this.windowService.openNewWindow(`data:application/x-pem-key,${encodeURIComponent(keyPair.privateKey)}`);
                     }
                 }
             } catch (error) {
@@ -86,7 +91,14 @@ export class SshQuickOpenService {
     }
 
     async copyPublicKey(): Promise<void> {
-        const keyPairs = await this.fetchAllKeyPairs();
+        let keyPairs: SshKeyPair[];
+        try {
+            keyPairs = await this.fetchAllKeyPairs();
+        } catch (error) {
+            this.logError(error);
+            return;
+        }
+
         if (keyPairs.length === 0) {
             this.messageService.info('There are no SSH keys to copy');
             return;
@@ -95,15 +107,10 @@ export class SshQuickOpenService {
         const executeFn = (item: SshKeyPairItem) => {
             const chosenKeyPair = item.getKeyPair();
             const publicKey = chosenKeyPair.publicKey;
-            if (!publicKey || publicKey.length === 0) {
-                this.messageService.info(`Key pair ${chosenKeyPair.name} doesn't contain a public key`);
+            if (publicKey && publicKey.length) {
+                this.clipboardService.copy(publicKey);
             } else {
-                const textarea = document.createElement('textarea');
-                textarea.value = publicKey;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
+                this.messageService.info(`Key pair ${chosenKeyPair.name} doesn't contain a public key`);
             }
         };
 
@@ -112,22 +119,30 @@ export class SshQuickOpenService {
     }
 
     async deleteKeyPair(): Promise<void> {
-        const keyPairs = await this.fetchAllKeyPairs();
+        let keyPairs: SshKeyPair[];
+        try {
+            keyPairs = await this.fetchAllKeyPairs();
+        } catch (error) {
+            this.logError(error);
+            return;
+        }
+
         if (keyPairs.length === 0) {
             this.messageService.info('There are no SSH key pairs to delete');
-        } else {
-            const executeFn = async (item: SshKeyPairItem) => {
-                try {
-                    const chosenKeyPair = item.getKeyPair();
-                    await this.sshKeyServer.delete(chosenKeyPair.service, chosenKeyPair.name);
-                } catch (error) {
-                    this.logError(error);
-                }
-            };
-
-            const items = keyPairs.map(keyPair => new SshKeyPairItem(keyPair, executeFn));
-            this.open(items, 'Choose key pair to delete');
+            return;
         }
+
+        const executeFn = async (item: SshKeyPairItem) => {
+            try {
+                const chosenKeyPair = item.getKeyPair();
+                await this.sshKeyServer.delete(chosenKeyPair.service, chosenKeyPair.name);
+            } catch (error) {
+                this.logError(error);
+            }
+        };
+
+        const items = keyPairs.map(keyPair => new SshKeyPairItem(keyPair, executeFn));
+        this.open(items, 'Choose key pair to delete');
     }
 
     /**
@@ -171,7 +186,7 @@ export class SshQuickOpenService {
         return keyPairs;
     }
 
-    protected open(items: QuickOpenItem | QuickOpenItem[], placeholder: string): void {
+    open(items: QuickOpenItem | QuickOpenItem[], placeholder: string): void {
         this.quickOpenService.open(this.getModel(Array.isArray(items) ? items : [items]), this.getOptions(placeholder));
     }
 

@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "test": "mocha -r ts-node/register **/test/**/*.spec.ts",
+    "test": "mocha -r ts-node/register **/test/**/*.spec.ts **/src/**/*.spec.ts",
     "prepare": "lerna run prepare",
     "rebuild:browser": "theia rebuild:browser",
     "rebuild:electron": "theia rebuild:electron"
