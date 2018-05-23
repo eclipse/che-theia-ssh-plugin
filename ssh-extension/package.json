@@ -27,7 +27,7 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "0.3.7",
+    "@theia/core": "0.3.10",
     "axios": "0.17.1"
   },
   "devDependencies": {
