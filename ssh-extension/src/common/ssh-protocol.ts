@@ -35,7 +35,7 @@ export interface SshKeyPair {
      * Che service that uses SSH key pair, e.g. workspace, machine, vcs.
      */
     service: string;
-    /** 
+    /**
      * Key pair identifier.
      */
     name: string;

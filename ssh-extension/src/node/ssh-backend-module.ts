@@ -17,7 +17,6 @@ import { SshKeyServiceClient, SshKeyServiceHttpClient } from './ssh-key-service-
 import { EnvVars } from './env-vars';
 import { WsMasterHttpClient } from './ws-master-http-client';
 
-
 export default new ContainerModule(bind => {
     bind(EnvVars).toSelf();
     bind(WsMasterHttpClient).toSelf();

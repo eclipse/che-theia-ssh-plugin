@@ -94,7 +94,7 @@ export class RemoteSshKeyManager implements SshKeyManager {
             this.sshKeyServiceClient
                 .generate(service, name)
                 .then(value => resolve(value))
-                .catch(reason => reject(reason))
+                .catch(reason => reject(reason));
         });
     }
 
@@ -106,7 +106,7 @@ export class RemoteSshKeyManager implements SshKeyManager {
             this.sshKeyServiceClient
                 .create(sshKeyPair)
                 .then(value => resolve(value))
-                .catch(reason => reject(reason))
+                .catch(reason => reject(reason));
         });
     }
 

@@ -83,9 +83,9 @@ export class SshQuickOpenService {
                     }
                     acceptor(items);
                 }
-            }
+            };
             this.quickOpenService.open(quickOpenModel, this.getOptions('public key', false));
-        }
+        };
         this.chooseServiceAndName('Pick a Che service to upload the public key for', executeFn, false);
     }
 
@@ -146,7 +146,7 @@ export class SshQuickOpenService {
 
     /**
      * Propose user to pick a Che service and enter a key pair name.
-     * 
+     *
      * @param placeholder placeholder text
      * @param execFunc function to call when user enters a key pair name
      * @param canClose whether quick open service should be closed after entering a key pair name
@@ -159,18 +159,18 @@ export class SshQuickOpenService {
         const executeFn = (chosenServiceItem: SshServiceItem) => {
             const quickOpenModel: QuickOpenModel = {
                 onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
-                    const items: QuickOpenItem[] = [];
+                    const quickOpenItems: QuickOpenItem[] = [];
                     const description = chosenServiceItem.getService().name === 'vcs' ? 'e.g. github.com' : undefined;
 
                     if (lookFor === undefined || lookFor.length === 0) {
-                        items.push(new ProvideKeyNameItem(description, () => { }, () => false));
+                        quickOpenItems.push(new ProvideKeyNameItem(description, () => { }, () => false));
                     } else {
                         const execute = (item: ProvideKeyNameItem) => execFunc(chosenServiceItem.getService().name, lookFor);
-                        items.push(new ProvideKeyNameItem(description, execute, () => canClose));
+                        quickOpenItems.push(new ProvideKeyNameItem(description, execute, () => canClose));
                     }
-                    acceptor(items);
+                    acceptor(quickOpenItems);
                 }
-            }
+            };
             this.quickOpenService.open(quickOpenModel, this.getOptions(`Key pair name for ${chosenServiceItem.getLabel()}`, false));
         };
 

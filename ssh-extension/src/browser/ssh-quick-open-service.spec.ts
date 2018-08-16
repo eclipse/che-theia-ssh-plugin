@@ -99,7 +99,6 @@ describe('ssh-quick-open-service', function () {
             allKeysStub.restore();
             quickOpenServiceSpy.restore();
 
-
             const clipboardService = testContainer.get(ClipboardService);
             const clipboardServiceStub = sinon.stub(clipboardService, 'copy');
 
@@ -125,7 +124,6 @@ describe('ssh-quick-open-service', function () {
 
             allKeysStub.restore();
             quickOpenServiceSpy.restore();
-
 
             const messageService = testContainer.get(MessageService);
             const infoMessageSpy = sinon.spy(messageService, 'info');
@@ -182,7 +180,6 @@ describe('ssh-quick-open-service', function () {
 
             allKeysStub.restore();
             quickOpenServiceSpy.restore();
-
 
             const sshKeyServer = testContainer.get<SshKeyServer>(SshKeyServer);
             const deleteSpy = sinon.spy(sshKeyServer, 'delete');

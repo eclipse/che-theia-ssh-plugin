@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-import { AxiosInstance, AxiosPromise, AxiosRequestConfig, default as axios } from 'axios'
+import { AxiosInstance, AxiosPromise, AxiosRequestConfig, default as axios } from 'axios';
 import { inject, injectable } from 'inversify';
 import { EnvVars } from './env-vars';
 
