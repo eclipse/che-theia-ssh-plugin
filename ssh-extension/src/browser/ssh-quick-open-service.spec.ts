@@ -10,7 +10,7 @@
 
 import { enableJSDOM } from '@theia/core/lib/browser/test/jsdom';
 
-let disableJSDOM = enableJSDOM();
+const disableJSDOM = enableJSDOM();
 
 import * as assert from 'assert';
 import 'mocha';
@@ -42,18 +42,10 @@ before(() => {
     testContainer.bind(QuickOpenService).toSelf().inSingletonScope();
     testContainer.bind(ClipboardService).toSelf().inSingletonScope();
     testContainer.bind(WindowService).to(MockWindowService);
-    testContainer.bind(SshQuickOpenService).toSelf().inSingletonScope();
+    testContainer.bind(SshQuickOpenService).toSelf();
 });
 
 describe('ssh-quick-open-service', function () {
-
-    before(() => {
-        disableJSDOM = enableJSDOM();
-    });
-
-    after(() => {
-        disableJSDOM();
-    });
 
     beforeEach(() => {
         service = testContainer.get(SshQuickOpenService);
