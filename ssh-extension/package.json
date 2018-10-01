@@ -1,6 +1,6 @@
 {
   "name": "che-theia-ssh-extension",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "SSH key management support for the Theia IDE",
   "keywords": [
     "theia-extension",
