@@ -8,11 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-import { inject, injectable } from 'inversify';
 import { SshKeyPair } from '../common/ssh-protocol';
 import { WsMasterHttpClient } from './ws-master-http-client';
-
-export const SshKeyServiceClient = Symbol('SshKeyServiceClient');
 
 /**
  * SSH key service client API definition. SSH key service is currently located
@@ -86,9 +83,8 @@ export interface SshKeyServiceClient {
  * service specific REST calls and process responses correspondingly (in
  * accordance to their HTTP statuses).
  */
-@injectable()
 export class SshKeyServiceHttpClient implements SshKeyServiceClient {
-    constructor(@inject(WsMasterHttpClient) protected readonly wsMasterHttpClient: WsMasterHttpClient) {
+    constructor(protected readonly wsMasterHttpClient: WsMasterHttpClient) {
     }
 
     /**

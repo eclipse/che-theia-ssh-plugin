@@ -8,9 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-import { AxiosInstance, AxiosPromise, AxiosRequestConfig, default as axios } from 'axios';
-import { inject, injectable } from 'inversify';
-import { EnvVars } from './env-vars';
+import { AxiosInstance, AxiosPromise, AxiosRequestConfig, default as axios } from 'axios'
 
 /**
  * Plain wrapper around {@link AxiosInstance} class that is configured to
@@ -20,17 +18,14 @@ import { EnvVars } from './env-vars';
  * values, however no correct request addressing is guaranteed in this case.
  *
  */
-@injectable()
 export class WsMasterHttpClient {
 
-    private readonly ISSUE = "Can't properly configure workspace master http client";
-    private readonly REASON = "CHE_API environment property is undefined";
+    private readonly ISSUE = 'Can\'t properly configure workspace master http client';
+    private readonly REASON = 'CHE_API environment property is undefined';
 
     private readonly axiosInstance: AxiosInstance;
 
-    constructor(@inject(EnvVars) protected readonly envVars: EnvVars) {
-        const cheApi = envVars.cheApi;
-
+    constructor(cheApi: string | undefined) {
         if (cheApi) {
             this.axiosInstance = axios.create({ baseURL: cheApi });
         } else {

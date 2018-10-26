@@ -1,7 +1,5 @@
-node_modules
-.idea
-.browser_modules
-lib
-*.log
-*-app/*
-!*-app/package.json
+dist/
+node_modules/
+lib/
+.idea/
+*.theia

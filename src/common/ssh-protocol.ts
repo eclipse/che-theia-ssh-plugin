@@ -8,9 +8,6 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-export const sshKeyServicePath = '/services/ssh-key';
-export const SshKeyServer = Symbol("SshKeyServer");
-
 /**
  * Representation of JSON-RPC service for SSH key pair management.
  */
@@ -25,6 +22,12 @@ export interface SshKeyServer {
     getAll(service: string): Promise<SshKeyPair[]>;
 
     delete(service: string, name: string): Promise<void>;
+}
+
+export interface CheService {
+    name: string,
+    displayName: string,
+    description: string
 }
 
 /**
