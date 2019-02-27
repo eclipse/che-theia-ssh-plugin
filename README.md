@@ -1,1 +1,1 @@
-Repository depricated will be remove soon all code moved here https://github.com/eclipse/che-theia/tree/master/plugins/ssh-plugin
+Repository is deprecated and will be removed soon. All code moved here https://github.com/eclipse/che-theia/tree/master/plugins/ssh-plugin
